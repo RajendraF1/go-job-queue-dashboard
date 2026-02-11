@@ -34,6 +34,39 @@ The goal is to showcase **backend and fullstack fundamentals** without UI comple
 
 ---
 
+## Running Migrations (golang-migrate)
+
+This project uses SQL migration files in `backend/migrations` and runs them via a
+`migrate` service in `docker-compose`.
+
+### 1) Start PostgreSQL
+```bash
+docker compose up -d db
+```
+
+### 2) Apply latest migration
+```bash
+docker compose --profile tools run --rm migrate
+```
+
+### 3) Check migration version
+```bash
+docker compose --profile tools run --rm migrate \
+  -path=/migrations \
+  -database=postgres://jobuser:jobpass@db:5432/jobqueue?sslmode=disable \
+  version
+```
+
+### 4) Roll back one migration
+```bash
+docker compose --profile tools run --rm migrate \
+  -path=/migrations \
+  -database=postgres://jobuser:jobpass@db:5432/jobqueue?sslmode=disable \
+  down 1
+```
+
+---
+
 ## Job Lifecycle
 
 ### Each job follows a strict state machine:
